@@ -2,8 +2,10 @@ package doh
 
 import (
 	"net"
+	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/nadoo/glider/pkg/log"
 	"github.com/nadoo/glider/proxy"
@@ -14,10 +16,10 @@ func init() {
 }
 
 type Doh struct {
-	dialer  proxy.Dialer
-	addr    string
-	path    string
-	timeout int
+	dialer proxy.Dialer
+	addr   string
+	path   string
+	client *http.Client
 }
 
 func NewDoh(s string, d proxy.Dialer) (*Doh, error) {
@@ -30,19 +32,27 @@ func NewDoh(s string, d proxy.Dialer) (*Doh, error) {
 	query := u.Query()
 
 	t := query.Get("timeout")
-	var timeout int64
+	var timeout int64 = 10
 
 	timeout, _ = strconv.ParseInt(t, 10, 0)
 
-	if timeout == 0 {
-		timeout = 10
-	}
-
 	p := &Doh{
-		dialer:  d,
-		addr:    u.Host,
-		path:    u.Path,
-		timeout: int(timeout),
+		dialer: d,
+		addr:   u.Host,
+		path:   u.Path,
+		client: &http.Client{
+			Transport: &http.Transport{
+				Dial: func(network string, addr string) (net.Conn, error) {
+					rc, err := d.Dial("tcp", addr)
+					if err != nil {
+						return nil, err
+					}
+
+					return rc, nil
+				},
+			},
+			Timeout: time.Duration(timeout) * time.Second,
+		},
 	}
 
 	return p, nil

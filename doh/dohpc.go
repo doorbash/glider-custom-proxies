@@ -30,23 +30,7 @@ func (f *DohPacketConn) WriteTo(p []byte, addr net.Addr) (int, error) {
 	r.Header.Set("Content-Type", "application/dns-message")
 	r.Header.Set("Accept", "application/dns-message")
 
-	transport := http.Transport{
-		Dial: func(network string, addr string) (net.Conn, error) {
-			rc, err := f.d.dialer.Dial("tcp", addr)
-			if err != nil {
-				return nil, err
-			}
-
-			return rc, nil
-		},
-	}
-
-	c := http.Client{
-		Transport: &transport,
-		Timeout:   time.Duration(f.d.timeout) * time.Second,
-	}
-
-	resp, err := c.Do(r)
+	resp, err := f.d.client.Do(r)
 	if err != nil {
 		return 0, fmt.Errorf("could not perform request: %s", err)
 	}

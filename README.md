@@ -6,7 +6,7 @@ glider -verbose -listen :1080 -forward httpobfs://xxx.xxx.xxx.xx:443/?host=googl
 
 - **doh:** dns over https. example:
 ```sh
-glider -verbose -listen udp://0.0.0.0:53 -forward socks5://127.0.0.1:10808,doh://mozilla.cloudflare-dns.com/dns-query?timeout=10
+glider -verbose -listen udp://0.0.0.0:53 -forward socks5://127.0.0.1:10808,doh://1.1.1.1?timeout=10
 ```
 
 ## Usage:

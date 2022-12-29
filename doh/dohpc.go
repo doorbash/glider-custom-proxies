@@ -22,7 +22,7 @@ func (c *DohPacketConn) ReadFrom(p []byte) (n int, addr net.Addr, err error) {
 
 func (f *DohPacketConn) WriteTo(p []byte, addr net.Addr) (int, error) {
 	enc := base64.RawURLEncoding.EncodeToString(p)
-	url := fmt.Sprintf("%s%s?dns=%s", f.d.addr, f.d.path, enc)
+	url := fmt.Sprintf("https://%s%s?dns=%s", f.d.addr, f.d.path, enc)
 	r, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return 0, fmt.Errorf("could not create request: %s", err)

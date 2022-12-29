@@ -19,7 +19,7 @@ func init() {
 type Doh struct {
 	dialer proxy.Dialer
 	addr   string
-	path   string
+	// path   string
 	client *http.Client
 }
 
@@ -42,7 +42,7 @@ func NewDoh(s string, d proxy.Dialer) (*Doh, error) {
 	p := &Doh{
 		dialer: d,
 		addr:   u.Host,
-		path:   u.Path,
+		// path:   u.Path,
 		client: &http.Client{
 			Transport: &http.Transport{
 				Dial: func(network string, addr string) (net.Conn, error) {

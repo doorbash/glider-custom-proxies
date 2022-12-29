@@ -16,6 +16,9 @@ type DohPacketConn struct {
 
 func (c *DohPacketConn) ReadFrom(p []byte) (n int, addr net.Addr, err error) {
 	msg := <-c.ch
+	if len(msg) > cap(p) {
+		return 0, nil, fmt.Errorf("bad response")
+	}
 	copy(p, msg)
 	return len(msg), nil, nil
 }
@@ -24,9 +27,9 @@ func (f *DohPacketConn) WriteTo(p []byte, addr net.Addr) (int, error) {
 	r, err := http.NewRequest(
 		http.MethodGet,
 		fmt.Sprintf(
-			"https://%s%s?dns=%s",
+			"https://%s/dns-query?dns=%s",
 			f.d.addr,
-			f.d.path,
+			// f.d.path,
 			base64.RawURLEncoding.EncodeToString(p),
 		),
 		nil,

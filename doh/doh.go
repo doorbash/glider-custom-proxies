@@ -16,6 +16,7 @@ func init() {
 type Doh struct {
 	dialer  proxy.Dialer
 	addr    string
+	path    string
 	timeout int
 }
 
@@ -28,7 +29,6 @@ func NewDoh(s string, d proxy.Dialer) (*Doh, error) {
 
 	query := u.Query()
 
-	addr := u.Host
 	t := query.Get("timeout")
 	var timeout int64
 
@@ -40,7 +40,8 @@ func NewDoh(s string, d proxy.Dialer) (*Doh, error) {
 
 	p := &Doh{
 		dialer:  d,
-		addr:    addr,
+		addr:    u.Host,
+		path:    u.Path,
 		timeout: int(timeout),
 	}
 

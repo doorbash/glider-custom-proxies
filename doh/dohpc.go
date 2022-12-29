@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net"
 	"net/http"
 	"time"
@@ -22,12 +21,6 @@ func (c *DohPacketConn) ReadFrom(p []byte) (n int, addr net.Addr, err error) {
 }
 
 func (f *DohPacketConn) WriteTo(p []byte, addr net.Addr) (int, error) {
-	log.Println(fmt.Sprintf(
-		"https://%s%s?dns=%s",
-		f.d.addr,
-		f.d.path,
-		base64.RawURLEncoding.EncodeToString(p),
-	))
 	r, err := http.NewRequest(
 		http.MethodGet,
 		fmt.Sprintf(

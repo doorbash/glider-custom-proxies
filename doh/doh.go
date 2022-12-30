@@ -1,7 +1,6 @@
 package doh
 
 import (
-	"fmt"
 	"net"
 	"net/http"
 	"net/url"
@@ -32,12 +31,7 @@ func NewDoh(s string, d proxy.Dialer) (*Doh, error) {
 
 	query := u.Query()
 
-	t := query.Get("timeout")
-	var timeout int64 = 10
-
-	timeout, _ = strconv.ParseInt(t, 10, 0)
-
-	fmt.Println(u)
+	timeout, _ := strconv.ParseInt(query.Get("timeout"), 10, 0)
 
 	p := &Doh{
 		dialer: d,

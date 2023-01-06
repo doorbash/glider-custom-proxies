@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/nadoo/glider/pkg/log"
@@ -67,12 +68,15 @@ func (s *Doh) Addr() string {
 }
 
 func (s *Doh) Dial(network, addr string) (c net.Conn, err error) {
-	return nil, proxy.ErrNotSupported
+	return s.dialer.Dial(network, addr)
 }
 
 func (s *Doh) DialUDP(network, addr string) (pc net.PacketConn, err error) {
-	return &DohPacketConn{
-		d:  s,
-		ch: make(chan []byte),
-	}, nil
+	if strings.HasSuffix(addr, ":53") {
+		return &DohPacketConn{
+			d:  s,
+			ch: make(chan []byte),
+		}, nil
+	}
+	return s.dialer.DialUDP(network, addr)
 }

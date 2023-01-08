@@ -7,6 +7,7 @@ glider -verbose -listen :1080 -forward httpobfs://xxx.xxx.xxx.xx:443/?host=googl
 - **doh:** dns over https. example:
 ```sh
 glider -verbose -listen :1080 -forward http://127.0.0.1:10809,doh://1.1.1.1
+glider -verbose -listen udp://0.0.0.0:53 -forward http://127.0.0.1:10809,doh://1.1.1.1,udp://8.8.8.8:53
 ```
 
 ## Install:

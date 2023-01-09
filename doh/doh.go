@@ -75,7 +75,7 @@ func (s *Doh) DialUDP(network, addr string) (pc net.PacketConn, err error) {
 	if strings.HasSuffix(addr, ":53") {
 		return &DohPacketConn{
 			d:  s,
-			ch: make(chan []byte),
+			ch: make(chan []byte, 1),
 		}, nil
 	}
 	return s.dialer.DialUDP(network, addr)
